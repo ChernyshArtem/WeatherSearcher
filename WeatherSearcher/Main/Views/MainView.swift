@@ -55,14 +55,6 @@ class MainView: UIViewController {
         view.addSubview(settingsButton)
         view.addSubview(searchField)
         setupSubviews()
-        
-        
-        
-        
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-                view.addGestureRecognizer(tap)
-        
-        
     }
     
     
@@ -91,6 +83,8 @@ class MainView: UIViewController {
         collectionView.register(ParameterCell.self, forCellWithReuseIdentifier: ParameterCell.identifier)
         setupBindings()
         settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+                view.addGestureRecognizer(tap)
     }
 
     private func setupBindings() {
