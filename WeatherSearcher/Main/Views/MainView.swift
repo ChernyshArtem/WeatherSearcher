@@ -29,6 +29,16 @@ class MainView: UIViewController {
         return settingsButton
     }()
     
+    let searchField: UITextField = {
+        let searchField = UITextField()
+        searchField.placeholder = "City name"
+        searchField.textColor = .white
+        searchField.layer.cornerRadius = 5
+        searchField.font = UIFont.systemFont(ofSize: 30)
+        searchField.backgroundColor = UIColor(red: 55 / 255, green: 126 / 255, blue: 191 / 255, alpha: 100)
+        return searchField
+    }()
+    
     let bag = DisposeBag()
     
     let viewModel: MainViewModelInterface = MainViewModel()
@@ -43,8 +53,18 @@ class MainView: UIViewController {
         view.backgroundColor = firstColor
         view.addSubview(collectionView)
         view.addSubview(settingsButton)
+        view.addSubview(searchField)
         setupSubviews()
+        
+        
+        
+        
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+                view.addGestureRecognizer(tap)
+        
+        
     }
+    
     
     private func setupSubviews() {
         collectionView.delegate = self
@@ -53,6 +73,11 @@ class MainView: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.right.equalTo(view.safeAreaLayoutGuide).inset(8)
             make.width.height.equalTo(35)
+        }
+        searchField.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.left.equalTo(view.safeAreaLayoutGuide).offset(8)
+            make.right.equalTo(settingsButton.snp.left).inset(-10)
         }
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(settingsButton.snp.bottom)
@@ -72,6 +97,10 @@ class MainView: UIViewController {
         viewModel.model.arrayOfTableData.bind { [weak self] model in
             self?.collectionView.reloadData()
         }.disposed(by: bag)
+        searchField.rx.text.bind { [weak self] model in
+            self?.viewModel.model.cityForSearch.accept(model ?? "Minsk")
+            self?.viewModel.refreshModelData()
+        }.disposed(by: bag)
     }
     
     @objc func openSettings() {
@@ -80,5 +109,9 @@ class MainView: UIViewController {
         self.present(vc, animated: true)
     }
     
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
     
 }

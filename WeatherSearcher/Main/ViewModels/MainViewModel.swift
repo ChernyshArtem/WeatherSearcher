@@ -22,7 +22,7 @@ class MainViewModel: MainViewModelInterface {
     }
     
     func refreshModelData() {
-        WeatherAPIWorker.findWeatherWithMinMaxTemp { [weak self] response, min, max  in
+        WeatherAPIWorker.findWeatherWithMinMaxTemp(city: model.cityForSearch.value) { [weak self] response, min, max  in
             
             self?.takeDataFromUserDafeaults(response: response)
             self?.model.humidity.accept(response.weatherInfo.humidity)
@@ -36,10 +36,10 @@ class MainViewModel: MainViewModelInterface {
     }
 
     private func takeDataFromUserDafeaults(response: WeatherResponse) {
-        var temperature   = UserDefaults.standard.string(forKey: "temperature")
-        var length        = UserDefaults.standard.string(forKey: "length")
-        var pressure      = UserDefaults.standard.string(forKey: "pressure")
-        var precipitation = UserDefaults.standard.string(forKey: "precipitation")
+        let temperature   = UserDefaults.standard.string(forKey: "temperature")
+        let length        = UserDefaults.standard.string(forKey: "length")
+        let pressure      = UserDefaults.standard.string(forKey: "pressure")
+        let precipitation = UserDefaults.standard.string(forKey: "precipitation")
 
         if temperature == "°C" {
             model.degrees.accept(response.weatherInfo.temperatureCelsius)

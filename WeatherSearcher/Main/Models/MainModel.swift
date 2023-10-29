@@ -24,4 +24,5 @@ class MainModel {
     var visible = BehaviorRelay(value: 0.0)
     var gust = BehaviorRelay(value: 0.0)
     
+    var cityForSearch = BehaviorRelay(value: "Minsk")
 }
